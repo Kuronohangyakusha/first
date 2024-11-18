@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter une tâche</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --dark-purple: #482A41;
+            --cream: #E2D2C8;
+            --light-purple: #CEB2BD;
+            --medium-purple: #8E7692;
+            --deep-purple: #572E54;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--cream);
+            color: var(--dark-purple);
+            line-height: 1.6;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: var(--dark-purple);
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .form-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            color: var(--dark-purple);
+            font-weight: 500;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        textarea,
+        select {
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--light-purple);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            background: white;
+            color: var(--dark-purple);
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--deep-purple);
+            box-shadow: 0 0 0 3px rgba(87, 46, 84, 0.1);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23482A41' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.2em;
+            padding-right: 2.5rem;
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .submit-button {
+            background-color: var(--deep-purple);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .submit-button:hover {
+            background-color: var(--dark-purple);
+            transform: translateY(-2px);
+        }
+
+        .back-button {
+            background-color: var(--medium-purple);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .back-button:hover {
+            background-color: var(--dark-purple);
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: #ff4444;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .help-text {
+            color: var(--medium-purple);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Style pour les messages d'erreur de Django */
+        .errorlist {
+            list-style: none;
+            color: #ff4444;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .form-card {
+                padding: 1.5rem;
+            }
+
+            .buttons-container {
+                flex-direction: column;
+            }
+
+            .submit-button,
+            .back-button {
+                width: 100%;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <i class="fas fa-plus-circle"></i>
+            Ajouter une nouvelle tâche
+        </h1>
+
+        <div class="form-card">
+            <form method="POST">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">
+                            {% if field.name == 'tache' %}
+                                <i class="fas fa-tasks"></i>
+                            {% elif field.name == 'description' %}
+                                <i class="fas fa-align-left"></i>
+                            {% elif field.name == 'status' %}
+                                <i class="fas fa-flag"></i>
+                            {% elif field.name == 'date_echeance' %}
+                                <i class="fas fa-calendar-alt"></i>
+                            {% endif %}
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small class="help-text">
+                                <i class="fas fa-info-circle"></i>
+                                {{ field.help_text }}
+                            </small>
+                        {% endif %}
+                        {% if field.errors %}
+                            {% for error in field.errors %}
+                                <span class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ error }}
+                                </span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <div class="buttons-container">
+                    <button type="submit" class="submit-button">
+                        <i class="fas fa-plus"></i>
+                        Ajouter la tâche
+                    </button>
+                    <a href="{% url 'Task_list' %}" class="back-button">
+                        <i class="fas fa-arrow-left"></i>
+                        Retour à la liste
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des tâches</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --dark-purple: #482A41;
+            --cream: #E2D2C8;
+            --light-purple: #CEB2BD;
+            --medium-purple: #8E7692;
+            --deep-purple: #572E54;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--cream);
+            color: var(--dark-purple);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: var(--dark-purple);
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-buttons a {
+            background-color: var(--medium-purple);
+            color: var(--cream);
+            padding: 0.8rem 1.5rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-buttons a:hover {
+            background-color: var(--dark-purple);
+            transform: translateY(-2px);
+        }
+
+        .search-form {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .search-form input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--light-purple);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-form button {
+            background-color: var(--deep-purple);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-form button:hover {
+            background-color: var(--dark-purple);
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            background: white;
+            margin-bottom: 1rem;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .task-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .task-header {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+        }
+
+        .task-details {
+            padding: 1.5rem;
+            background-color: var(--cream);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .task-details p {
+            margin-bottom: 0.5rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .action-buttons a {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn {
+            background-color: #ff4444;
+            color: white;
+        }
+
+        .edit-btn {
+            background-color: var(--medium-purple);
+            color: white;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .pagination a {
+            padding: 0.8rem 1.2rem;
+            background-color: white;
+            border: 1px solid var(--light-purple);
+            border-radius: 0.5rem;
+            color: var(--dark-purple);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .pagination a:hover {
+            background-color: var(--light-purple);
+            color: white;
+        }
+
+        .pagination .active {
+            background-color: var(--dark-purple);
+            color: white;
+        }
+
+        .add-task-button {
+            display: inline-block;
+            background-color: var(--deep-purple);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            font-weight: 500;
+            margin: 2rem auto;
+            transition: all 0.3s ease;
+        }
+
+        .add-task-button:hover {
+            background-color: var(--dark-purple);
+            transform: translateY(-2px);
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .status-todo {
+            background-color: var(--light-purple);
+            color: var(--dark-purple);
+        }
+
+        .status-progress {
+            background-color: var(--medium-purple);
+            color: white;
+        }
+
+        .status-done {
+            background-color: var(--deep-purple);
+            color: white;
+        }
+
+        .center-button {
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .filter-buttons {
+                flex-direction: column;
+            }
+
+            .filter-buttons a {
+                width: 100%;
+                text-align: center;
+            }
+
+            .task-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Liste des Tâches</h1>
+        
+        <div class="filter-buttons">
+            <a href="?statut=">Toutes les tâches</a>
+            <a href="?statut=to do">À faire</a>
+            <a href="?statut=in progress">En cours</a>
+            <a href="?statut=done">Terminées</a>
+        </div>
+        
+        <form class="search-form" method="get">
+            <input type="text" name="search" id="search" value="{{ search_query }}" placeholder="Rechercher une tâche...">
+            <button type="submit">
+                <i class="fas fa-search"></i> Rechercher
+            </button>
+        </form>
+
+        {% if page_obj %}
+            <ul class="task-list">
+                {% for task in page_obj %}
+                    <li class="task-item">
+                        <div class="task-header" onclick="toggleDetails('{{ task.id }}')">
+                            <span>{{ task.tache }}</span>
+                            <span class="status-badge status-{{ task.status }}">{{ task.get_status_display }}</span>
+                        </div>
+                        
+                        <div id="details-{{ task.id }}" class="task-details" style="display: none;">
+                            <p><strong>Description:</strong> {{ task.description }}</p>
+                            <p><strong>Créée le:</strong> {{ task.datedecreation }}</p>
+                            <p><strong>Échéance:</strong> 
+                                {% if task.date_echeance %}
+                                    {{ task.date_echeance }}
+                                {% else %}
+                                    Non définie
+                                {% endif %}
+                            </p>
+                            <div class="action-buttons">
+                                <a href="{% url 'modifier_tache' task.id %}" class="edit-btn">
+                                    <i class="fas fa-edit"></i> Modifier
+                                </a>
+                                <a href="{% url 'supprimer_tache' task.id %}" class="delete-btn" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?')">
+                                    <i class="fas fa-trash"></i> Supprimer
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1&statut={{ status_task }}&search={{ search_query }}">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                    <a href="?page={{ page_obj.previous_page_number }}&statut={{ status_task }}&search={{ search_query }}">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                {% endif %}
+                
+                <span class="current-page">
+                    Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+                </span>
+                
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}&statut={{ status_task }}&search={{ search_query }}">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}&statut={{ status_task }}&search={{ search_query }}">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                {% endif %}
+            </div>
+        {% else %}
+            <p class="no-tasks">Aucune tâche trouvée pour votre recherche.</p>
+        {% endif %}
+
+        <div class="center-button">
+            <a href="{% url 'ajouter_tache' %}" class="add-task-button">
+                <i class="fas fa-plus"></i> Ajouter une tâche
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function toggleDetails(taskId) {
+            const details = document.getElementById(`details-${taskId}`);
+            details.style.display = details.style.display === "none" ? "block" : "none";
+        }
+    </script>
+</body>
+</html>
