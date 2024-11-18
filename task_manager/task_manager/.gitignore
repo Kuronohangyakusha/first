@@ -1,5 +1,10 @@
+# Ignorer l'environnement virtuel Python
 env/
+
+# Ignorer les fichiers .pyc et __pycache__
 *.pyc
 __pycache__/
-db.sqlite3
-*.log
+
+# Ignorer les fichiers de configuration de l'IDE (par exemple, VSCode, PyCharm)
+.vscode/
+.idea/
